@@ -25,9 +25,8 @@ class RealEstateGame:
             self._spaces[0] = Spaces(0, go_money)
         for number in range(24):
             for rent in rent_money_list:
-                if number not in self._spaces:
-                    real_space = number + 1
-                    self._spaces[real_space] = Spaces(real_space, rent)
+                real_space = number + 1
+                self._spaces[real_space] = Spaces(real_space, rent)
 
     def create_player(self, unique_name, initial_balance):
         self._players[unique_name] = Player(unique_name, initial_balance)
@@ -40,7 +39,11 @@ class RealEstateGame:
             return self._players[unique_name].get_balance()
 
     def get_player_current_position(self, unique_name):
-        return self._players[unique_name].get_location()
+        if unique_name in self._players:
+            if self._players[unique_name].get_location() == 0:
+                return 0
+            else:
+                return self._players[unique_name].get_location()
 
     def buy_space(self, unique_name):
         current_space_name = self.get_player_current_position(unique_name)
@@ -58,9 +61,9 @@ class RealEstateGame:
         return False
 
     def move_player(self, unique_name, number_spaces):
+        owner = self._players[unique_name]
         if self._players[unique_name].get_balance == 0:
             return
-        owner = self._players[unique_name]
         current_index = self.get_player_current_position(unique_name)
         true_position = number_spaces + current_index
         if true_position <= 25:
