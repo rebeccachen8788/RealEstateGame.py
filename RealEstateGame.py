@@ -40,11 +40,7 @@ class RealEstateGame:
             return self._players[unique_name].get_balance()
 
     def get_player_current_position(self, unique_name):
-        if unique_name in self._players:
-            if self._players[unique_name].get_location() == 0:
-                return 0
-            else:
-                return self._players[unique_name].get_location()
+        return self._players[unique_name].get_location()
 
     def buy_space(self, unique_name):
         current_space_name = self.get_player_current_position(unique_name)
