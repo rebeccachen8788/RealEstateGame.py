@@ -26,7 +26,8 @@ class RealEstateGame:
         for number in range(24):
             for rent in rent_money_list:
                 if number not in self._spaces:
-                    self._spaces[number] = Spaces(number, rent)
+                    real_space = number + 1
+                    self._spaces[real_space] = Spaces(real_space, rent)
 
     def create_player(self, unique_name, initial_balance):
         self._players[unique_name] = Player(unique_name, initial_balance)
@@ -63,7 +64,7 @@ class RealEstateGame:
     def move_player(self, unique_name, number_spaces):
         if self._players[unique_name].get_balance == 0:
             return
-        spaces_track = list(self._spaces)
+        owner = self._players[unique_name]
         current_index = self.get_player_current_position(unique_name)
         true_position = number_spaces + current_index
         if true_position <= 25:
@@ -88,13 +89,13 @@ class RealEstateGame:
                 return
             if true_space_object.get_owner() != unique_name and not None:
                 if rent >= self._players[unique_name].get_balance():
+                    rent_cost = self._spaces[true_position].get_rent()
+                    rent_paid = self._players[unique_name].get_balance()
+                    true_rent_paid = rent_cost - rent_paid
+                    owner.set_balance(true_rent_paid)
                     self._players[unique_name].set_zero()
                     self._players[unique_name].clear_owned_spaces()
                     self._players[unique_name].set_location(true_position)
-                    self._spaces[true_position].set_current_players(unique_name)
-                    owner = self._spaces[true_position].get_owner()
-                    rent_paid = self._players[unique_name].get_balance()
-                    owner.set_balance(rent_paid)
                     self._current_players.remove(unique_name)
                     return
                 if rent < self._players[unique_name].get_balance():
@@ -102,9 +103,8 @@ class RealEstateGame:
                     self._players[unique_name].set_balance(negate_rent)
                     self._players[unique_name].set_location(true_position)
                     self._spaces[true_position].set_current_players(unique_name)
-                    owner = self._spaces[true_position].get_owner()
-                    rent_paid = self._players[unique_name].get_balance()
-                    owner.set_balance(rent_paid)
+                    rent_cost = self._spaces[true_position].get_rent()
+                    owner.set_balance(rent_cost)
                     return
         if true_position > 25:
             new_position = true_position - 25 - 1
@@ -128,13 +128,14 @@ class RealEstateGame:
                 return
             if true_space_object.get_owner() != unique_name and not None:
                 if rent >= self._players[unique_name].get_balance():
+                    rent_cost = self._spaces[new_position].get_rent()
+                    rent_paid = self._players[unique_name].get_balance()
+                    true_rent_paid = rent_cost - rent_paid
+                    owner.set_balance(true_rent_paid)
                     self._players[unique_name].set_zero()
                     self._players[unique_name].clear_owned_spaces()
                     self._players[unique_name].set_location(new_position)
                     self._spaces[new_position].set_current_players(unique_name)
-                    owner = self._spaces[new_position].get_owner()
-                    rent_paid = self._players[unique_name].get_balance()
-                    owner.set_balance(rent_paid)
                     self._current_players.remove(unique_name)
                     return
                 if rent < self._players[unique_name].get_balance():
@@ -142,9 +143,8 @@ class RealEstateGame:
                     self._players[unique_name].set_balance(negate_rent)
                     self._players[unique_name].set_location(new_position)
                     self._spaces[new_position].set_current_players(unique_name)
-                    owner = self._spaces[new_position].get_owner()
-                    rent_paid = self._players[unique_name].get_balance()
-                    owner.set_balance(rent_paid)
+                    rent_cost = self._spaces[new_position].get_rent()
+                    owner.set_balance(rent_cost)
                     return
 
     def check_game_over(self):
