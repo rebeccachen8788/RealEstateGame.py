@@ -62,7 +62,7 @@ class RealEstateGame:
         if self._players[unique_name].get_balance == 0:
             return
         spaces_track = list(self._spaces)
-        current_index = self.get_player_current_position()
+        current_index = self.get_player_current_position(unique_name)
         true_position = number_spaces + current_index
         if true_position <= 25:
             if true_position != 0:
