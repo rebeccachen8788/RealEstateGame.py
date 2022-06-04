@@ -107,7 +107,7 @@ class RealEstateGame:
             if new_position != 0:
                 for x in range(number_spaces):
                     if x + current_index + 1 == 26:
-                        space_object = self._spaces[potential_go]
+                        space_object = self._spaces[0]
                         money_given = space_object.get_money_amount()
                         self._players[unique_name].set_balance(money_given)
             true_space_object = self._spaces[new_position]
