@@ -6,7 +6,7 @@
 #              created, with a minimum of 2 players in order to play. The go space will give money (but not when
 #              players initially start on go, and players can move 1-6 spaces. Players can buy a space with their
 #              money but must also pay rent if landing on unowned spaces. Passing by the go space will add money.
-#              The game ends when only one player is left. Players lose by losing all of their money.
+#              The game ends when only one player is left. Players lose by losing all of their account balance.
 
 class RealEstateGame:
     """
