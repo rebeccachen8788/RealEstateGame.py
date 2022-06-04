@@ -50,9 +50,11 @@ class RealEstateGame:
         if current_space_name != 0 and self._spaces[current_space_name].get_owner() is None:
             current_space_object = self._spaces[current_space_name]
             if self.get_player_account_balance(unique_name) > current_space_object.get_purchase_price():
-                purchase_price = current_space_object.get_purchase_price
-                self._players[unique_name].set_balance(-1 * purchase_price)
+                purchase_price = current_space_object.get_purchase_price()
+                reduce_account = -1*purchase_price
+                self._players[unique_name].set_balance(reduce_account)
                 self._players[unique_name].set_owned_spaces(current_space_name)
+                current_space_object.set_owner(unique_name)
                 return True
             else:
                 return False
@@ -76,7 +78,7 @@ class RealEstateGame:
             rent = true_space_object.get_rent()
             if true_position == 0:
                 self._players[unique_name].set_location(true_position)
-                self._spaces[true_position].set_current_plauers(unique_name)
+                self._spaces[true_position].set_current_players(unique_name)
                 money = self._spaces[true_position].get_money_amount()
                 self._players[unique_name].set_balance(money)
                 return
@@ -94,6 +96,7 @@ class RealEstateGame:
                     rent_paid = self._players[unique_name].get_balance()
                     owner.set_balance(rent_paid)
                     self._current_players.remove(unique_name)
+                    return
                 if rent < self._players[unique_name].get_balance():
                     negate_rent = -1*rent
                     self._players[unique_name].set_balance(negate_rent)
@@ -102,6 +105,7 @@ class RealEstateGame:
                     owner = self._spaces[true_position].get_owner()
                     rent_paid = self._players[unique_name].get_balance()
                     owner.set_balance(rent_paid)
+                    return
         if true_position > 25:
             new_position = true_position - 25 - 1
             if new_position != 0:
@@ -114,7 +118,7 @@ class RealEstateGame:
             rent = true_space_object.get_rent()
             if new_position == 0:
                 self._players[unique_name].set_location(new_position)
-                self._spaces[new_position].set_current_plauers(unique_name)
+                self._spaces[new_position].set_current_players(unique_name)
                 money = self._spaces[new_position].get_money_amount()
                 self._players[unique_name].set_balance(money)
                 return
@@ -132,6 +136,7 @@ class RealEstateGame:
                     rent_paid = self._players[unique_name].get_balance()
                     owner.set_balance(rent_paid)
                     self._current_players.remove(unique_name)
+                    return
                 if rent < self._players[unique_name].get_balance():
                     negate_rent = -1*rent
                     self._players[unique_name].set_balance(negate_rent)
@@ -140,6 +145,7 @@ class RealEstateGame:
                     owner = self._spaces[new_position].get_owner()
                     rent_paid = self._players[unique_name].get_balance()
                     owner.set_balance(rent_paid)
+                    return
 
     def check_game_over(self):
         if len(self._current_players) == 1:
@@ -235,3 +241,23 @@ class Player:
 
     def set_zero(self):
         self._balance = 0
+
+
+
+game = RealEstateGame()
+
+rents = [50, 50, 50, 75, 75, 75, 100, 100, 100, 150, 150, 150, 200, 200, 200, 250, 250, 250, 300, 300, 300, 350, 350, 350]
+game.create_spaces(50, rents)
+
+game.create_player("Player 1", 1000)
+game.create_player("Player 2", 1000)
+game.create_player("Player 3", 1000)
+
+game.move_player("Player 1", 6)
+game.buy_space("Player 1")
+game.move_player("Player 2", 6)
+
+print(game.get_player_account_balance("Player 1"))
+print(game.get_player_account_balance("Player 2"))
+
+print(game.check_game_over())
