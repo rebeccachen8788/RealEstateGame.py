@@ -95,7 +95,8 @@ class RealEstateGame:
                     owner.set_balance(rent_paid)
                     self._current_players.remove(unique_name)
                 if rent < self._players[unique_name].get_balance():
-                    self._players[unique_name].set_balance(-1 * rent)
+                    negate_rent = -1*rent
+                    self._players[unique_name].set_balance(negate_rent)
                     self._players[unique_name].set_location(true_position)
                     self._spaces[true_position].set_current_players(unique_name)
                     owner = self._spaces[true_position].get_owner()
@@ -132,7 +133,8 @@ class RealEstateGame:
                     owner.set_balance(rent_paid)
                     self._current_players.remove(unique_name)
                 if rent < self._players[unique_name].get_balance():
-                    self._players[unique_name].set_balance(-1 * rent)
+                    negate_rent = -1*rent
+                    self._players[unique_name].set_balance(negate_rent)
                     self._players[unique_name].set_location(new_position)
                     self._spaces[new_position].set_current_players(unique_name)
                     owner = self._spaces[new_position].get_owner()
