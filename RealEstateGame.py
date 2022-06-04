@@ -23,10 +23,9 @@ class RealEstateGame:
         """
         if 0 not in self._spaces:
             self._spaces[0] = Spaces(0, go_money)
-        for number in range(24):
-            for rent in rent_money_list:
-                real_space = number + 1
-                self._spaces[real_space] = Spaces(real_space, rent)
+        for number in range(1, 24):
+            rent = rent_money_list[number-1]
+            self._spaces[number] = Spaces(number, rent)
 
     def create_player(self, unique_name, initial_balance):
         self._players[unique_name] = Player(unique_name, initial_balance)
@@ -51,7 +50,7 @@ class RealEstateGame:
             current_space_object = self._spaces[current_space_name]
             if self.get_player_account_balance(unique_name) > current_space_object.get_purchase_price():
                 purchase_price = current_space_object.get_purchase_price()
-                reduce_account = -1*purchase_price
+                reduce_account = (-1*purchase_price)
                 self._players[unique_name].set_balance(reduce_account)
                 self._players[unique_name].set_owned_spaces(current_space_name)
                 current_space_object.set_owner(unique_name)
@@ -61,7 +60,6 @@ class RealEstateGame:
         return False
 
     def move_player(self, unique_name, number_spaces):
-        owner = self._players[unique_name]
         if self._players[unique_name].get_balance == 0:
             return
         current_index = self.get_player_current_position(unique_name)
@@ -86,24 +84,28 @@ class RealEstateGame:
                 self._players[unique_name].set_location(true_position)
                 self._spaces[true_position].set_current_players(unique_name)
                 return
-            if true_space_object.get_owner() != unique_name and not None:
+            if true_space_object.get_owner() != unique_name and true_space_object.get_owner() is not None:
                 if rent >= self._players[unique_name].get_balance():
+                    owner = true_space_object.get_owner()
+                    real_owner = self._players[owner]
                     rent_cost = self._spaces[true_position].get_rent()
                     rent_paid = self._players[unique_name].get_balance()
                     true_rent_paid = rent_cost - rent_paid
-                    owner.set_balance(true_rent_paid)
+                    real_owner.set_balance(true_rent_paid)
                     self._players[unique_name].set_zero()
                     self._players[unique_name].clear_owned_spaces()
                     self._players[unique_name].set_location(true_position)
                     self._current_players.remove(unique_name)
                     return
                 if rent < self._players[unique_name].get_balance():
-                    negate_rent = -1*rent
+                    owner = true_space_object.get_owner()
+                    real_owner = self._players[owner]
+                    negate_rent = (-1*rent)
                     self._players[unique_name].set_balance(negate_rent)
                     self._players[unique_name].set_location(true_position)
                     self._spaces[true_position].set_current_players(unique_name)
                     rent_cost = self._spaces[true_position].get_rent()
-                    owner.set_balance(rent_cost)
+                    real_owner.set_balance(rent_cost)
                     return
         if true_position > 25:
             new_position = true_position - 25 - 1
@@ -125,12 +127,14 @@ class RealEstateGame:
                 self._players[unique_name].set_location(new_position)
                 self._spaces[new_position].set_current_players(unique_name)
                 return
-            if true_space_object.get_owner() != unique_name and not None:
+            if true_space_object.get_owner() != unique_name and true_space_object.get_owner() is not None:
                 if rent >= self._players[unique_name].get_balance():
+                    owner = true_space_object.get_owner()
+                    real_owner = self._players[owner]
                     rent_cost = self._spaces[new_position].get_rent()
                     rent_paid = self._players[unique_name].get_balance()
                     true_rent_paid = rent_cost - rent_paid
-                    owner.set_balance(true_rent_paid)
+                    real_owner.set_balance(true_rent_paid)
                     self._players[unique_name].set_zero()
                     self._players[unique_name].clear_owned_spaces()
                     self._players[unique_name].set_location(new_position)
@@ -138,12 +142,14 @@ class RealEstateGame:
                     self._current_players.remove(unique_name)
                     return
                 if rent < self._players[unique_name].get_balance():
-                    negate_rent = -1*rent
+                    owner = true_space_object.get_owner()
+                    real_owner = self._players[owner]
+                    negate_rent = (-1*rent)
                     self._players[unique_name].set_balance(negate_rent)
                     self._players[unique_name].set_location(new_position)
                     self._spaces[new_position].set_current_players(unique_name)
                     rent_cost = self._spaces[new_position].get_rent()
-                    owner.set_balance(rent_cost)
+                    real_owner.set_balance(rent_cost)
                     return
 
     def check_game_over(self):
@@ -162,8 +168,8 @@ class Spaces:
     def __init__(self, space_name, money_amount):
         self._space_name = space_name
         self._money_amount = money_amount
-        self._rent = 0
-        self._purchase_price = 0
+        self._rent = money_amount
+        self._purchase_price = (money_amount * 5)
         self._owner = None
         self._current_players = []
 
@@ -172,7 +178,6 @@ class Spaces:
 
     def get_rent(self):
         if self._space_name != 0:
-            self._rent = self._money_amount
             self._money_amount = 0
             return self._rent
 
@@ -181,9 +186,7 @@ class Spaces:
             return self._money_amount
 
     def get_purchase_price(self):
-        if self._space_name != 0:
-            self._purchase_price = (self._money_amount * 5)
-            return self._purchase_price
+        return self._purchase_price
 
     def get_owner(self):
         return self._owner
