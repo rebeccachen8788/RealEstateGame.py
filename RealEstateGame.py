@@ -95,8 +95,8 @@ class RealEstateGame:
         buy the space and own it. If they have an equal or lesser amount of money than the unowned purchase
         price of the space, nothing will happen.
         """
-        if self._players[unique_name].get_balance == 0:  # If the balance of the player is zero, player can't move.
-            return
+        if self._players[unique_name].get_balance() == 0:  # If the balance of the player is zero, player can't move.
+            return False
         current_index = self.get_player_current_position(unique_name)
         true_position = number_spaces + current_index
         if true_position <= 24:
@@ -149,10 +149,7 @@ class RealEstateGame:
                     real_owner.set_balance(rent_cost)
                     return
         if true_position >= 25:
-            if true_position > 25:
-                new_position = (true_position - 25 - 1)
-            else:
-                new_position = true_position - 25
+            new_position = true_position - 25
             if new_position != 0:
                 for x in range(number_spaces):
                     if x + current_index + 1 == 26:  # If passing by 0, collect money
